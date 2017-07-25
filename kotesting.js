@@ -90,6 +90,17 @@ function AppViewModel() {
   }, self);
 }
 
+ko.bindingHandlers.slideVisible = {
+  update: function(element, valueAccessor, allBindings) {
+    var value = ko.unwrap(valueAccessor());
+    if (value == true) {
+      $(element).slideDown(900); // make element visible
+    } else { // the else is needed to make sure the verdict element disappears onload (or 0 load time)
+      $(element).slideUp(0); // make element invisible
+    }
+  }
+}
+
 function check() {
     alert("Please make sure that you've entered your birthday correctly. \nUse the format 12/21");
 }
