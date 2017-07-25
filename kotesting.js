@@ -4,7 +4,7 @@ function AppViewModel() {
   var sign = ""; // for zodiac message
   var message = ""; // for verdict message at the end
   var points = 0;
-  self.oneGame = ko.observable(true); //  toggles visibility on main form to make room for verdict screen 
+  self.oneGame = ko.observable(true); //  toggles visibility on main form to make room for verdict screen
   self.total = ko.observable(0); // for computing verdict message
   self.submit = ko.observable(false); // for determining if visibility
   self.email = ko.observable(false); // for determining visibility of email form
@@ -83,8 +83,8 @@ function AppViewModel() {
       if (points >= 8) {
         message = "Looks like we may get along. Let's grab coffee sometime; fill out the form below:";
         self.oneGame(false);
+        self.email(true);
       };
-      self.email(true);
       return message;
     }
   }, self);
