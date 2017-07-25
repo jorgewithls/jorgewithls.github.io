@@ -3,6 +3,8 @@ function AppViewModel() {
   var birthday = "";
   var sign = "";
   var points = 0;
+  var result = "";
+  self.submit = ko.observable(false);
 
   self.age = ko.observable();
   self.games = ko.observable(false);
@@ -12,10 +14,14 @@ function AppViewModel() {
   self.bday = ko.observable();
   self.visibility = function(value) {
     var filled = ko.utils.unwrapObservable(value);
-    var test = filled != null ? true : false;
+    var test = filled != null || filled != undefined ? true : false;
     return test;
   };
+  self.trigger = function() {
+    self.score(self.result2);
+  }
   self.score = function() {
+    console.log("beginning of score");
     if (ko.utils.unwrapObservable(self.age) == '16-20') {  // based off of age
       points += 4;
     } else if (ko.utils.unwrapObservable(self.age) == '21-25') {
@@ -39,10 +45,13 @@ function AppViewModel() {
     if (sign == "a Scorpio") points += 2;
     if (sign == "a Sagitarius") points += 2;
     if (sign == "a Capricorn") points += 2;
+    self.submit(true);
   };
-  self.result = ko.computed(function () {
-    var result = ""; 
-  }, self);
+  self.result = function() {
+    if (points == 0) {
+      self.trigger();
+    }
+  };
   self.zodiacFind = ko.computed(function() {
     if (ko.utils.unwrapObservable(self.bday) != null) {
       var str = ko.utils.unwrapObservable(self.bday);
