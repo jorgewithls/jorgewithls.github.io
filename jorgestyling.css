@@ -1,96 +1,108 @@
-.container {
-  overflow: hidden;
+function AppViewModel() {
+  var self = this;
+  var birthday = ""; // for storing user input birthday
+  var sign = ""; // for zodiac message
+  var message = ""; // for verdict message at the end
+  var points = 0;
+  self.oneGame = ko.observable(true); //  toggles visibility on main form to make room for verdict screen
+  self.total = ko.observable(0); // for computing verdict message
+  self.submit = ko.observable(false); // for determining if visibility
+  self.email = ko.observable(false); // for determining visibility of email form
+
+  self.age = ko.observable();
+  self.games = ko.observable(false);
+  self.gamesF = function() {return true;}; // toggles button click data being sent back to observable
+  self.cook = ko.observable(false);
+  self.cookF = function() {return true;}
+  self.bday = ko.observable();
+
+  // determines if bday has been filled out or not and controls visibility accordingly
+  self.visibility = function(value) {
+    var filled = ko.utils.unwrapObservable(value);
+    var test = filled != null || filled != undefined ? true : false;
+    return test;
+  };
+
+  // compiles scores from different answer and comes to a point total
+  self.score = function() {
+    if (ko.utils.unwrapObservable(self.age) == '16-20') {  // based off of age
+      points += 4;
+    } else if (ko.utils.unwrapObservable(self.age) == '21-25') {
+      points += 3;
+    } else if (ko.utils.unwrapObservable(self.age) == '0-15') {
+      points += 2;
+    } else if (ko.utils.unwrapObservable(self.age) == '26-30') {
+      points++;
+    }
+    if (ko.utils.unwrapObservable(self.games)) {points++;}; // based off of games
+    if (ko.utils.unwrapObservable(self.cook)) {points++;}; // based off of cooking
+    // based off of sign
+    if (sign == "an Aquarius") points += 4;
+    if (sign == "a Pisces") points += 2;
+    if (sign == "an Aries") points += 2;
+    if (sign == "a Taurus") points += 2;
+    if (sign == "a Gemini") points += 4;
+    if (sign == "a Cancer") points += 1;
+    if (sign == "a Leo") points += 3;
+    if (sign == "a Virgo") points += 2;
+    if (sign == "a Libra") points += 4;
+    if (sign == "a Scorpio") points += 2;
+    if (sign == "a Sagitarius") points += 2;
+    if (sign == "a Capricorn") points += 2;
+    self.total(points);
+    self.submit(true);
+  };
+
+  // sorts out zodiac based on birthday
+  self.zodiacFind = ko.computed(function() {
+    if (ko.utils.unwrapObservable(self.bday) != null) {
+      var str = ko.utils.unwrapObservable(self.bday);
+      birthday = str.split("/");
+      if ((birthday[0] == 1 && birthday[1] >= 20) || (birthday[0] == 2 && birthday[1] <= 18)) sign = "an Aquarius";
+      if ((birthday[0] == 2 && birthday[1] > 18) || (birthday[0] == 3 && birthday[1] <= 20)) sign = "a Pisces";
+      if ((birthday[0] == 3 && birthday[1] > 20) || (birthday[0] == 4 && birthday[1] <= 19)) sign = "an Aries";
+      if ((birthday[0] == 4 && birthday[1] > 20) || (birthday[0] == 5 && birthday[1] <= 20)) sign = "a Taurus";
+      if ((birthday[0] == 5 && birthday[1] > 20) || (birthday[0] == 6 && birthday[1] <= 20)) sign = "a Gemini";
+      if ((birthday[0] == 6 && birthday[1] > 20) || (birthday[0] == 7 && birthday[1] <= 22)) sign = "a Cancer";
+      if ((birthday[0] == 7 && birthday[1] > 22) || (birthday[0] == 8 && birthday[1] <= 22)) sign = "a Leo";
+      if ((birthday[0] == 8 && birthday[1] > 22) || (birthday[0] == 9 && birthday[1] <= 22)) sign = "a Virgo";
+      if ((birthday[0] == 9 && birthday[1] > 22) || (birthday[0] == 10 && birthday[1] <= 22)) sign = "a Libra";
+      if ((birthday[0] == 10 && birthday[1] > 22) || (birthday[0] == 11 && birthday[1] <= 21)) sign = "a Scorpio";
+      if ((birthday[0] == 11 && birthday[1] > 21) || (birthday[0] == 12 && birthday[1] <= 21)) sign = "a Sagitarius";
+      if ((birthday[0] == 12 && birthday[1] > 21) || (birthday[0] == 1 && birthday[1] <= 19)) sign = "a Capricorn";
+      return sign;
+    }
+  }, self);
+
+  // determines ending message based on points
+  self.verdict = ko.computed(function() {
+    if (ko.utils.unwrapObservable(self.total) != 0) {
+      if (points < 3) message = "Sorry, doesn't look like you're my type.";
+      if (points >= 4 && points < 6) message = "Sorry, you're not exactly who I'm looking for right now.";
+      if (points >= 6 && points < 8) message = "Hmm, check me out on Instagram @jorgealv.png";
+      if (points >= 8) {
+        message = "Looks like we may get along. Let's grab coffee sometime; fill out the form below:";
+        self.oneGame(false);
+        self.email(true);
+      };
+      return message;
+    }
+  }, self);
 }
-.sidebar {
-  position: fixed;
-  width: 25%;
-  height: 100%;
-  bottom: 0;
-  left: 0;
-  top: 0;
-  overflow: hidden;
+
+ko.bindingHandlers.slideVisible = {
+  update: function(element, valueAccessor, allBindings) {
+    var value = ko.unwrap(valueAccessor());
+    if (value == true) {
+      $(element).slideDown(900); // make element visible
+    } else { // the else is needed to make sure the verdict element disappears onload (or 0 load time)
+      $(element).slideUp(0); // make element invisible
+    }
+  }
 }
-.right {
-  margin-left: 24%;
-  width: 100%;
+
+function check() {
+    alert("Please make sure that you've entered your birthday correctly. \nUse the format 12/21");
 }
-#top {
-  width: 80%;
-  background: -webkit-radial-gradient(lightblue, pink); /* Safari 5.1- 6.0 */
-  background: -o-radial-gradient(lightblue, pink); /* Opera 11.6-12.0 */
-  background: -moz-radial-gradient(lightblue, pink); /* Firefox 3.6-15 */
-  background:
-    linear-gradient(217deg, rgba(0,0,255,0.3), rgba(255,0,0,0)),
-    linear-gradient(127deg, rgba(0, 248, 255, 0.58), rgba(0,255,0,0)),
-    linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0)); /* rgba(0,0,255,0) is transparent */
-  position: fixed;
-  top: 0;
-  height: 30%;
-  box-shadow: 0 4px 10px 2px black;
-}
-#top p {
-  text-align: center;
-  text-shadow: 2px 4px #007FB2;
-}
-#bottom {
-  width: 80%;
-  background: -webkit-radial-gradient(lightblue, pink); /* Safari 5.1- 6.0 */
-  background: -o-radial-gradient(lightblue, pink); /* Opera 11.6-12.0 */
-  background: -moz-radial-gradient(lightblue, pink); /* Firefox 3.6-15 */
-  background:
-    linear-gradient(220deg, rgba(0,0,255,0.9), rgba(0,0,255,0)),
-    linear-gradient(90deg, rgba(255,0,212,0.7), rgba(0,0,255,0));
-  opacity: 0.8;
-  position: fixed;
-  bottom: 0;
-  height: 70%;
-}
-table, #bottom p {
-  margin-left: 10%;
-  font-family: "Fredericka the Great";
-  font-size: 20px;
-}
-td {
-  padding-right: 45px;
-  padding-bottom: 5px;
-}
-div img {
-  display: block;
-  margin: auto;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  z-index: -1;
-}
-#submit {
-  background-color: Transparent;
-  border: 2pt solid white;
-  font-family: "Fredericka the Great";
-  font-size: 20px;
-  padding: 10px;
-  transition-duration: 0.5s;
-}
-#submit:hover {
-  background-color: white;
-  border-radius: 20px;
-  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-}
-input {
-  border: 2pt dashed white;
-  border-radius: 10px;
-  font-family: "Indie Flower";
-  font-size: 16px;
-  background-color: white;
-}
-select {
-  border: 2pt dashed white;
-}
-.sidebar p {
-  position: absolute;
-  z-index: 1;
-  color: black;
-  font-size: 50px;
-  top: 38%;
-  left: 12%;
-  text-shadow: 0 0 10px white;
-}
+
+ko.applyBindings(new AppViewModel());
