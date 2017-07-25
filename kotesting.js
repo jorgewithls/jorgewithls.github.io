@@ -4,9 +4,10 @@ function AppViewModel() {
   var sign = ""; // for zodiac message
   var message = ""; // for verdict message at the end
   var points = 0;
+  self.oneGame = ko.observable(true); //  toggles visibility on main form to make room for verdict screen 
   self.total = ko.observable(0); // for computing verdict message
   self.submit = ko.observable(false); // for determining if visibility
-  self.email = ko.observable(false); // for determining visibility of email form 
+  self.email = ko.observable(false); // for determining visibility of email form
 
   self.age = ko.observable();
   self.games = ko.observable(false);
@@ -79,7 +80,10 @@ function AppViewModel() {
       if (points < 3) message = "Sorry, doesn't look like you're my type.";
       if (points >= 4 && points < 6) message = "Sorry, you're not exactly who I'm looking for right now.";
       if (points >= 6 && points < 8) message = "Hmm, check me out on Instagram @jorgealv.png";
-      if (points >= 8) message = "Looks like we may get along. Let's grab coffee sometime; fill out the form below:";
+      if (points >= 8) {
+        message = "Looks like we may get along. Let's grab coffee sometime; fill out the form below:";
+        self.oneGame(false);
+      };
       self.email(true);
       return message;
     }
