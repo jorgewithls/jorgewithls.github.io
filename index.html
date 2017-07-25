@@ -14,7 +14,7 @@
       </div>
       <div id="bottom">
         <h2 style="font-family: Indie Flower; text-align: center; font-size: 38px">Is your name Earl Gray? Because you're a hot tea ;)</h2>
-        <table>
+        <table data-bind="visible: oneGame">
           <tbody>
             <tr><td>How old are you?</td>
             <td><select data-bind="options: ['', '0-15', '16-20', '21-25', '26-30', '31-35', '36-40'], value: age"></select></td></tr>
@@ -27,7 +27,7 @@
             <td data-bind="visible: visibility(bday)">You're <span data-bind="text: zodiacFind"></span>   <input type="button" value="Incorrect" onclick="check()"></input></td></tr>
           </tbody>
         </table>
-        <p><input id="submit" type="submit" data-bind="click: score"></input></p> <!-- even though score is a function, it has to be called as a variable or else it'll execute on load -->
+        <p><input id="submit" type="submit" data-bind="click: score, visible: oneGame"></input></p> <!-- even though score is a function, it has to be called as a variable or else it'll execute on load -->
         <p data-bind="visible: submit">Verdict: <strong data-bind="text: verdict"></strong></p>
         <form data-bind="visible: email" action="mailto:jorgealv@students.highline.edu" method="post" enctype="text/plain">
           <table>
@@ -38,7 +38,7 @@
             </tr>
             <tr>
               <td><input id="submit" type="submit" value="Send"></input></td>
-            </tr> 
+            </tr>
           </table>
         </form>
         <script src="kotesting.js" type="text/javascript"></script>
