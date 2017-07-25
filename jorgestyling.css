@@ -62,6 +62,29 @@ div img {
   position: absolute;
   z-index: -1;
 }
+#submit {
+  background-color: Transparent;
+  border: 2pt solid white;
+  font-family: "Fredericka the Great";
+  font-size: 20px;
+  padding: 10px;
+  transition-duration: 0.5s;
+}
+#submit:hover {
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+input {
+  border: 2pt dashed white;
+  border-radius: 10px;
+  font-family: "Indie Flower";
+  font-size: 16px;
+  background-color: white;
+}
+select {
+  border: 2pt dashed white;
+}
 .sidebar p {
   position: absolute;
   z-index: 1;
