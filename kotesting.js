@@ -9,6 +9,7 @@ function AppViewModel() {
   self.submit = ko.observable(false); // for determining if visibility
   self.email = ko.observable(false); // for determining visibility of email form
 
+  self.gender = ko.observable();
   self.age = ko.observable();
   self.games = ko.observable(false);
   self.gamesF = function() {return true;}; // toggles button click data being sent back to observable
@@ -49,6 +50,7 @@ function AppViewModel() {
     if (sign == "a Scorpio") points += 2;
     if (sign == "a Sagitarius") points += 2;
     if (sign == "a Capricorn") points += 2;
+    if (ko.utils.unwrapObservable(self.gender)) == 'male') points = 0; // gender goes last to cancel out if user is male
     self.total(points);
     self.submit(true);
   };
