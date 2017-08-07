@@ -50,9 +50,13 @@ function AppViewModel() {
     if (sign == "a Scorpio") points += 2;
     if (sign == "a Sagitarius") points += 2;
     if (sign == "a Capricorn") points += 2;
-    if (ko.utils.unwrapObservable(self.gender)) == 'male') points = 0; // gender goes last to cancel out if user is male
+    // gender isn't counted because it'll factor in at the verdict
     self.total(points);
-    self.submit(true);
+    if (ko.utils.unwrapObservable(self.total) == 0) {
+      alert("Please fill out all fields before entering.");
+    } else {
+      self.submit(true);
+    }
   };
 
   // sorts out zodiac based on birthday
@@ -78,7 +82,9 @@ function AppViewModel() {
 
   // determines ending message based on points
   self.verdict = ko.computed(function() {
-    if (ko.utils.unwrapObservable(self.total) != 0) {
+    if (ko.utils.unwrapObservable(self.gender) == "Male") {
+      message = "Sorry, I'm not into guys.";
+    } else if (ko.utils.unwrapObservable(self.total) != 0) {
       if (points < 3) message = "Sorry, doesn't look like you're my type.";
       if (points >= 4 && points < 6) message = "Sorry, you're not exactly who I'm looking for right now.";
       if (points >= 6 && points < 8) message = "Hmm, check me out on Instagram @jorgealv.png";
@@ -86,10 +92,10 @@ function AppViewModel() {
         message = "Looks like we may get along. Let's grab coffee sometime; fill out the form below:";
         self.oneGame(false);
         self.email(true);
-      };
+        };
+      }
       return message;
-    }
-  }, self);
+    }, self);
 }
 
 ko.bindingHandlers.slideVisible = {
